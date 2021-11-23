@@ -1,0 +1,62 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.4'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id "au.com.dius.pact" version "4.3.1"
+}
+
+group = 'com.Learning'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'mysql:mysql-connector-java'
+	runtimeOnly 'org.postgresql:postgresql'
+
+	//implementation group: 'au.com.dius', name: 'pact-jvm-consumer-junit5', version: '4.0.10'
+	//implementation group: 'au.com.dius', name: 'pact-jvm-consumer-java8', version: '4.0.10'
+	implementation group: 'au.com.dius', name: 'pact-jvm-provider-junit5', version: '4.0.10'
+
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.4.0'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+pact {
+	serviceProviders {
+		'User' {
+			hasPactsFromPactBroker('https://pdeshpande.pactflow.io/',
+					authentication: ['Bearer', 'W7TcLFaIApgUOYnCx66h4g'])
+		}
+	}
+}
+
+/*
+pact {
+	publish {
+		pactBrokerUrl = 'https://pdeshpande.pactflow.io'
+		pactBrokerUsername = 'pooja.deshpande@thoughtworks.com'
+		pactBrokerPassword = 'catalyst'
+		//pactBrokerToken = 'W7TcLFaIApgUOYnCx66h4g'
+	}
+}
+
+ */
